@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Arsenic</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_crypto_detail">Detail</string>
+
+    <string name="currency_name">%s (%s)</string>
+
+    <string name="btc_currency">BTC: %s</string>
+    <string name="usd_currency">USD: %s</string>
+    <string name="czk_currency">CZK: %s</string>
+    <string name="eur_currency">EUR: %s</string>
+    <string name="gbp_currency">GBP: %s</string>
+    <string name="pln_currency">PLN: %s</string>
+    <string name="rub_currency">RUB: %s</string>
+    <string name="btc">BTC:</string>
+    <string name="_1_h">1 h:</string>
+    <string name="usd">USD:</string>
+    <string name="_7_d">7 d:</string>
+    <string name="_24_h">24 h:</string>
+</resources>
