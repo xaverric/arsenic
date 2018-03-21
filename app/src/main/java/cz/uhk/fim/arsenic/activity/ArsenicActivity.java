@@ -1,57 +1,58 @@
 package cz.uhk.fim.arsenic.activity;
 
-import android.content.Context;
+import android.Manifest;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
+import android.content.pm.PackageManager;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.ItemClick;
+import org.androidannotations.annotations.ItemLongClick;
 import org.androidannotations.annotations.ItemSelect;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.rest.spring.annotations.RestService;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-
 import cz.uhk.fim.arsenic.R;
-import cz.uhk.fim.arsenic.core.android.adapter.CurrencyListAdapter;
 import cz.uhk.fim.arsenic.core.configuration.Configuration;
 import cz.uhk.fim.arsenic.core.configuration.CurrencyType;
+import cz.uhk.fim.arsenic.core.initialize.ArsenicGuiInitializer;
+import cz.uhk.fim.arsenic.core.initialize.GuiComponentsHolder;
 import cz.uhk.fim.arsenic.core.model.Currency;
 import cz.uhk.fim.arsenic.core.rest.CurrencyRest;
+import cz.uhk.fim.arsenic.core.service.Services;
 
-@Fullscreen
 @EActivity(R.layout.activity_arsenic)
 public class ArsenicActivity extends AppCompatActivity {
 
-    public static final int REQUEST_CODE = 1;
-
-    //TODO Refresh list on pull down
-    //TODO Move ranks more to left
-    //TODO Aling spinners
-    //TODO create detail of currency
-    //TODO when no connection - hide all except button
+    @ViewById
+    SwipeRefreshLayout refreshLayout;
 
     @ViewById
-    TextView noConnectionNotification;
+    LinearLayout noConnectionLayout;
+
+    @ViewById
+    LinearLayout contentLayout;
 
     @ViewById
     Button reloadButton;
@@ -68,24 +69,39 @@ public class ArsenicActivity extends AppCompatActivity {
     @RestService
     CurrencyRest<Currency> currencyRest;
 
+    @ViewById
+    Toolbar mainToolbar;
+
+    private GuiComponentsHolder holder;
+
+    private FusedLocationProviderClient client;
+    private LocationCallback locationCallback;
+
     @AfterViews
     public void init() {
-        initSpinners();
-        performAssyncTask(currencySpinner.getSelectedItem().toString(), Integer.parseInt((String) limitSpinner.getSelectedItem()));
+        if (holder == null) {
+            holder = createGuiComponentsHolder();
+        }
+        new ArsenicGuiInitializer(holder, this).initAll();
+        Services.ASSYNC_TASK_SERVICE.loadAllCurrencies(holder);
+
+        locationCallback = Services.GEO_LOCATION_SERVICE.creaeLocationCallback(holder);
+
+        setSupportActionBar(mainToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     @Click(R.id.reloadButton)
     public void reloadItems() {
-        noConnectionNotification.setVisibility(View.GONE);
-        reloadButton.setVisibility(View.GONE);
-        init();
+        Services.ASSYNC_TASK_SERVICE.loadAllCurrencies(holder);
     }
 
     @ItemSelect(R.id.currencySpinner)
     public void currencySpinnerItemSelected(boolean selected, CurrencyType selectedItem) {
         if (selected) {
             Configuration.currencyType = selectedItem;
-            performAssyncTask(selectedItem.toString(), Integer.parseInt((String) limitSpinner.getSelectedItem()));
+            Services.ASSYNC_TASK_SERVICE.loadAllCurrencies(holder);
         }
     }
 
@@ -93,7 +109,7 @@ public class ArsenicActivity extends AppCompatActivity {
     public void limitSpinnerItemSelected(boolean selected, String selectedItem) {
         if (selected) {
             Configuration.limit = Integer.parseInt(selectedItem);
-            performAssyncTask(currencySpinner.getSelectedItem().toString(), Integer.parseInt(selectedItem));
+            Services.ASSYNC_TASK_SERVICE.loadAllCurrencies(holder);
         }
     }
 
@@ -102,48 +118,60 @@ public class ArsenicActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CryptoDetailActivity_.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("currency", clickedItem);
+        bundle.putSerializable("convertedCurrency", (CurrencyType) currencySpinner.getSelectedItem());
         intent.putExtras(bundle);
-        startActivityForResult(intent, REQUEST_CODE);
+        startActivity(intent);
     }
 
-    private void initSpinners() {
-        final ArrayAdapter<CurrencyType> adapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, EnumSet.allOf(CurrencyType.class).toArray());
-        currencySpinner.setAdapter(adapter);
+    @ItemLongClick(R.id.cryptoList)
+    public void listItemLongClicked(final Currency clickedItem) {
+        LayoutInflater li = LayoutInflater.from(this);
+        View promptsView = li.inflate(R.layout.create_notification_dialog, null);
+        Services.ALERT_DIALOG_SERVICE.createCurrencyAlert(promptsView, clickedItem, this);
     }
 
-    private void performAssyncTask(final String currencyType, final Integer limit) {
-        if (isOnline()) {
-            createAsyncTaskLoadCurrencies(currencySpinner.getSelectedItem().toString(), Integer.parseInt((String) limitSpinner.getSelectedItem()));
+    @Click(R.id.geoLocationBtn)
+    public void startStopLocationTracking(View sender) {
+        if (Configuration.isLocationTracking){
+            FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
+            client.removeLocationUpdates(locationCallback);
+            Toast.makeText(this, "Location turned off", Toast.LENGTH_LONG).show();
+            Configuration.isLocationTracking = false;
         } else {
-            noConnectionNotification.setVisibility(View.VISIBLE);
-            reloadButton.setVisibility(View.VISIBLE);
+            LocationRequest locationRequest = new LocationRequest();
+            locationRequest.setInterval(500);
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                client = LocationServices.getFusedLocationProviderClient(this);
+                client.requestLocationUpdates(locationRequest, locationCallback, null);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+            Toast.makeText(this, "Location turned on", Toast.LENGTH_LONG).show();
+            Configuration.isLocationTracking = true;
         }
     }
 
-    private void createAsyncTaskLoadCurrencies(final String currencyType, final Integer limit) {
-        final ArrayList<Currency> cryptoCurrencyList = new ArrayList<>();
-        final ArrayAdapter<Currency> adapter = new CurrencyListAdapter(this, cryptoCurrencyList);
-        cryptoList.setAdapter(adapter);
-
-        new AsyncTask<Void, Void, List<Currency>>() {
-            @Override
-            protected List<Currency> doInBackground(Void... voids) {
-                return new ObjectMapper().convertValue(currencyRest.getConvertedCurrencies(currencyType, limit), new TypeReference<List<Currency>>() {
-                });
-            }
-
-            @Override
-            protected void onPostExecute(List<Currency> currencies) {
-                cryptoCurrencyList.addAll(currencies);
-                adapter.notifyDataSetChanged();
-                Log.i("list", cryptoCurrencyList.toString());
-            }
-        }.execute();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 1){
+            startStopLocationTracking(null);
+        }
     }
 
-    public boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnected();
+    private GuiComponentsHolder createGuiComponentsHolder() {
+        GuiComponentsHolder holder = new GuiComponentsHolder();
+        holder.setContentLayout(contentLayout);
+        holder.setCryptoList(cryptoList);
+        holder.setCurrencySpinner(currencySpinner);
+        holder.setLimitSpinner(limitSpinner);
+        holder.setNoConnectionLayout(noConnectionLayout);
+        holder.setReloadButton(reloadButton);
+        holder.setRefreshLayout(refreshLayout);
+        holder.setCurrencyRest(currencyRest);
+        holder.setContext(this);
+        holder.setGeocoder(new Geocoder(this));
+        return holder;
     }
 }

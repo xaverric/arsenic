@@ -20,4 +20,11 @@
         <item>180</item>
         <item>200</item>
     </string-array>
+
+    <string-array name="countryCodes" >
+        <item>0,CZ</item>
+        <item>1,GB</item>
+        <item>2,PL</item>
+        <item>3,RU</item>
+    </string-array>
 </resources>

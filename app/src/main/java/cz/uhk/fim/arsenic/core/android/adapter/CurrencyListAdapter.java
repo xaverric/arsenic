@@ -160,9 +160,6 @@ public class CurrencyListAdapter extends ArrayAdapter<Currency> {
     }
 
     private int findImage(String imageId){
-        if (imageId.equals("theta")){
-            System.out.printf("ted");
-        }
         Resources r = getContext().getResources();
         Integer reference = r.getIdentifier(imageId, "drawable", getContext().getPackageName());
         if (reference != 0){

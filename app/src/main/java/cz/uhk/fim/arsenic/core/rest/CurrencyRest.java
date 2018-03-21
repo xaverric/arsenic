@@ -10,6 +10,9 @@ import java.util.List;
 @Rest(converters = MappingJackson2HttpMessageConverter.class)
 public interface CurrencyRest<T> {
 
+    @Get("https://api.coinmarketcap.com/v1/ticker/{currencyId}")
+    List<T> getCurrency(@Path String currencyId);
+
     @Get("https://api.coinmarketcap.com/v1/ticker")
     List<T> getAllCurrencies();
 
