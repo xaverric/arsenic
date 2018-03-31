@@ -15,8 +15,8 @@ import cz.uhk.fim.arsenic.core.model.Currency;
 
 public class AlertDialogService {
 
-    private static final int FIVE_MINUTES_IN_MS = 5000;//300000;
-    private static final int HOUR_IN_MS = 100000;//3600000;
+    private static final int FIVE_MINUTES_IN_MS = 300000;
+    private static final int HOUR_IN_MS = 3600000;
 
     private CheckBox checkBoxPriceAbove;
     private CheckBox checkBoxPriceBelow;

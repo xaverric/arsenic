@@ -8,13 +8,16 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@drawable/btc"
+        android:roundIcon="@drawable/btc"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:label="Arsenic">
         <activity
             android:name=".activity.ArsenicActivity_"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,14 +27,15 @@
         <activity
             android:name=".activity.CryptoDetailActivity_"
             android:label="@string/title_activity_crypto_detail"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cz.uhk.fim.arsenic.activity.ArsenicActivity_" />
         </activity>
 
-        <receiver android:name=".core.android.notification.CurrencyNotificationReceiver_">
-        </receiver>
+        <receiver android:name=".core.android.notification.CurrencyNotificationReceiver_" />
+
     </application>
 
 </manifest>

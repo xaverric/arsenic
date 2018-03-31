@@ -10,19 +10,35 @@
         android:layout_width="80dip"
         android:layout_height="80dip"
         android:layout_centerVertical="true"
-        android:layout_marginStart="10dp"
-        android:gravity="center_vertical" />
-
-    <TextView
-        android:id="@+id/heading"
+        android:layout_marginStart="10dp"/>
+    
+    <LinearLayout
         android:layout_width="match_parent"
+        android:id="@id/name"
         android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:text="Name (Symbol)"
+        android:orientation="horizontal"
         android:layout_marginStart="20dp"
-        android:layout_toEndOf="@id/cryptoImage"
-        android:textSize="27sp" />
+        android:layout_toEndOf="@id/cryptoImage">
 
+        <ImageView
+            android:id="@+id/savedCurrencyStar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/star"
+            android:visibility="gone"/>
+        
+        <TextView
+            android:id="@+id/heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="Name (Symbol)"
+            android:layout_toEndOf="@id/cryptoImage"
+            android:textSize="27sp" />
+        
+    </LinearLayout>
 
     <TableLayout
         android:id="@+id/table"
@@ -32,7 +48,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="10dp"
         android:layout_toEndOf="@id/cryptoImage"
-        android:layout_below="@id/heading">
+        android:layout_below="@id/name">
 
         <TableRow
             android:layout_width="wrap_content"
@@ -52,7 +68,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginStart="40dp"
                 android:singleLine="true"
                 android:text="@string/_1_h"
                 android:textSize="15sp" />
@@ -83,7 +98,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginStart="40dp"
                 android:singleLine="true"
                 android:text="@string/_24_h"
                 android:textSize="15sp" />
@@ -113,7 +127,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginStart="40dp"
                 android:singleLine="true"
                 android:text="@string/_7_d"
                 android:textSize="15sp" />

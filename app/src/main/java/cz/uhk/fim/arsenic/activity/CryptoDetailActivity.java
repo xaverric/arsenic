@@ -99,7 +99,7 @@ public class CryptoDetailActivity extends AppCompatActivity {
 
     @AfterViews
     protected void init() {
-        currency = (Currency)getIntent().getExtras().get("currency");
+        currency = (Currency) getIntent().getExtras().get("currency");
         convertedCurrency = (CurrencyType) getIntent().getExtras().get("convertedCurrency");
         loadAllData();
 
@@ -110,13 +110,13 @@ public class CryptoDetailActivity extends AppCompatActivity {
     }
 
     @Click(R.id.reminderButton)
-    public void showNotificationDialog(){
+    public void showNotificationDialog() {
         LayoutInflater li = LayoutInflater.from(this);
         View promptsView = li.inflate(R.layout.create_notification_dialog, null);
         Services.ALERT_DIALOG_SERVICE.createCurrencyAlert(promptsView, currency, this);
     }
 
-    private void loadAllData(){
+    private void loadAllData() {
         icon.setBackgroundResource(findImage(currency.getSymbol().toLowerCase()));
         name.setText(currency.getName());
         symbol.setText(currency.getSymbol());
@@ -136,41 +136,41 @@ public class CryptoDetailActivity extends AppCompatActivity {
         totalSupply.setText(Double.toString(currency.getTotalSupply()));
         maxSupply.setText(Double.toString(currency.getMaxSupply()));
 
-        Date expiry = new Date((long)currency.getLastUpdated() * 1000);
+        Date expiry = new Date((long) currency.getLastUpdated() * 1000);
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         String formattedDate = sdf.format(expiry);
         lastUpdated.setText(formattedDate);
     }
 
-    private int findImage(String imageId){
+    private int findImage(String imageId) {
         Resources r = getResources();
         Integer reference = r.getIdentifier(imageId, "drawable", getPackageName());
-        if (reference != 0){
+        if (reference != 0) {
             return reference;
         }
         return r.getIdentifier("no_icon", "drawable", getPackageName());
     }
 
-    private void setCustomCurrency(){
+    private void setCustomCurrency() {
         String selectedValue = Configuration.currencyType.name();
-        if (selectedValue != null){
-            if (selectedValue.equals(CurrencyType.CZK.toString())){
+        if (selectedValue != null) {
+            if (selectedValue.equals(CurrencyType.CZK.toString())) {
                 customPriceValue.setText(Double.toString(currency.getPriceCzk()));
                 marketCapCustomValue.setText(Double.toString(currency.getMarketCapCzk()));
                 customDayVolumeValue.setText(Double.toString(currency.getDayVolumeCzk()));
-            } else if (selectedValue.equals(CurrencyType.EUR.toString())){
+            } else if (selectedValue.equals(CurrencyType.EUR.toString())) {
                 customPriceValue.setText(Double.toString(currency.getPriceEur()));
                 marketCapCustomValue.setText(Double.toString(currency.getMarketCapEur()));
                 customDayVolumeValue.setText(Double.toString(currency.getDayVolumeEurk()));
-            }else if (selectedValue.equals(CurrencyType.GBP.toString())){
+            } else if (selectedValue.equals(CurrencyType.GBP.toString())) {
                 customPriceValue.setText(Double.toString(currency.getPriceGbp()));
                 marketCapCustomValue.setText(Double.toString(currency.getMarketCapGbp()));
                 customDayVolumeValue.setText(Double.toString(currency.getDayVolumeGbp()));
-            }else if (selectedValue.equals(CurrencyType.PLN.toString())){
+            } else if (selectedValue.equals(CurrencyType.PLN.toString())) {
                 customPriceValue.setText(Double.toString(currency.getPricePln()));
                 marketCapCustomValue.setText(Double.toString(currency.getMarketCapPln()));
                 customDayVolumeValue.setText(Double.toString(currency.getDayVolumePln()));
-            }else if (selectedValue.equals(CurrencyType.RUB.toString())){
+            } else if (selectedValue.equals(CurrencyType.RUB.toString())) {
                 customPriceValue.setText(Double.toString(currency.getPriceRub()));
                 marketCapCustomValue.setText(Double.toString(currency.getMarketCapRub()));
                 customDayVolumeValue.setText(Double.toString(currency.getDayVolumeRub()));

@@ -1,22 +1,27 @@
 package cz.uhk.fim.arsenic.core.initialize;
 
 import android.content.Context;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 
 import cz.uhk.fim.arsenic.R;
-import cz.uhk.fim.arsenic.core.android.adapter.CurrencyListAdapter;
+import cz.uhk.fim.arsenic.core.android.adapter.SectionsPageAdapter;
 import cz.uhk.fim.arsenic.core.configuration.CurrencyType;
 import cz.uhk.fim.arsenic.core.model.Currency;
-import cz.uhk.fim.arsenic.core.service.Services;
+import cz.uhk.fim.arsenic.fragment.AllCurrencyTabFragment;
+import cz.uhk.fim.arsenic.fragment.FavoriteCurrencyTabFragment;
 
 public class ArsenicGuiInitializer {
 
     public static ArrayList<Currency> cryptoCurrencyList;
     public static ArrayAdapter<Currency> cryptoCurrencyListAdapter;
+
+    public static ArrayList<Currency> favouriteCryptoCurrencyList;
+    public static ArrayAdapter<Currency> favouriteCryptoCurrencyListAdapter;
 
     private GuiComponentsHolder holder;
     private Context context;
@@ -28,8 +33,7 @@ public class ArsenicGuiInitializer {
 
     public void initAll() {
         initSpinners();
-        initRefreshLayout();
-        initList();
+        initTabLayout();
     }
 
     private void initSpinners() {
@@ -37,27 +41,18 @@ public class ArsenicGuiInitializer {
         holder.getCurrencySpinner().setAdapter(currencyAdapter);
         holder.getCurrencySpinner().setSelection(0);
         holder.getCurrencySpinner().setSelected(true);
-
-        final ArrayAdapter<CharSequence> limitAdapter = ArrayAdapter.createFromResource(context, R.array.limit, R.layout.spinner_item);
-        holder.getLimitSpinner().setAdapter(limitAdapter);
-        holder.getLimitSpinner().setSelection(0);
-        holder.getLimitSpinner().setSelected(true);
     }
 
-    private void initRefreshLayout() {
-        holder.getRefreshLayout().setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        Services.ASSYNC_TASK_SERVICE.loadAllCurrencies(holder);
-                    }
-                }
-        );
+    private void initTabLayout (){
+        setupViewPager(holder.getContainer());
+        holder.getTabs().setupWithViewPager(holder.getContainer());
+        holder.getTabs().setSelectedTabIndicatorColor(ContextCompat.getColor(holder.getContext(), R.color.colorWhite));
     }
 
-    private void initList() {
-        cryptoCurrencyList = new ArrayList<>();
-        cryptoCurrencyListAdapter = new CurrencyListAdapter(context, cryptoCurrencyList);
-        holder.getCryptoList().setAdapter(cryptoCurrencyListAdapter);
+    private void setupViewPager(ViewPager viewPager){
+        SectionsPageAdapter adapter = new SectionsPageAdapter(holder.getFragmentManager());
+        adapter.addFragment(new AllCurrencyTabFragment(), "ALL");
+        adapter.addFragment(new FavoriteCurrencyTabFragment(), "FAVOURITE");
+        viewPager.setAdapter(adapter);
     }
 }

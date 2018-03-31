@@ -6,7 +6,11 @@
     android:viewportHeight="32">
 
     <path
-        android:fillColor="#000"
+        android:fillColor="#627EEA"
+        android:fillType="evenOdd"
+        android:pathData="M 16 0 C 24.2842712475 0 31 6.71572875254 31 15 C 31 23.2842712475 24.2842712475 30 16 30 C 7.71572875254 30 1 23.2842712475 1 15 C 1 6.71572875254 7.71572875254 0 16 0 Z" />
+    <path
+        android:fillColor="#627EEA"
         android:fillType="evenOdd"
         android:pathData="M 16 0 C 24.2842712475 0 31 6.71572875254 31 15 C 31 23.2842712475 24.2842712475 30 16 30 C 7.71572875254 30 1 23.2842712475 1 15 C 1 6.71572875254 7.71572875254 0 16 0 Z" />
     <path
@@ -18,7 +22,7 @@
         android:fillType="evenOdd"
         android:pathData="M 16 0 C 24.2842712475 0 31 6.71572875254 31 15 C 31 23.2842712475 24.2842712475 30 16 30 C 7.71572875254 30 1 23.2842712475 1 15 C 1 6.71572875254 7.71572875254 0 16 0 Z" />
     <path
-        android:fillColor="#000"
+        android:fillColor="#627EEA"
         android:fillType="evenOdd"
         android:pathData="M 16 0 C 24.2842712475 0 31 6.71572875254 31 15 C 31 23.2842712475 24.2842712475 30 16 30 C 7.71572875254 30 1 23.2842712475 1 15 C 1 6.71572875254 7.71572875254 0 16 0 Z" />
     <path
@@ -26,11 +30,7 @@
         android:fillType="evenOdd"
         android:pathData="M 16 0 C 24.2842712475 0 31 6.71572875254 31 15 C 31 23.2842712475 24.2842712475 30 16 30 C 7.71572875254 30 1 23.2842712475 1 15 C 1 6.71572875254 7.71572875254 0 16 0 Z" />
     <path
-        android:fillColor="#000"
-        android:fillType="evenOdd"
-        android:pathData="M 16 0 C 24.2842712475 0 31 6.71572875254 31 15 C 31 23.2842712475 24.2842712475 30 16 30 C 7.71572875254 30 1 23.2842712475 1 15 C 1 6.71572875254 7.71572875254 0 16 0 Z" />
-    <path
-        android:fillColor="#000"
+        android:fillColor="#627EEA"
         android:fillType="evenOdd"
         android:pathData="M 16 0 C 24.2842712475 0 31 6.71572875254 31 15 C 31 23.2842712475 24.2842712475 30 16 30 C 7.71572875254 30 1 23.2842712475 1 15 C 1 6.71572875254 7.71572875254 0 16 0 Z" />
     <path
@@ -48,7 +48,7 @@
         android:fillType="evenOdd"
         android:pathData="M16.498 20.968L24 16.616l-7.502 10.379L9 16.615l7.498 4.351zm0-17.968l7.497 12.22-7.497 4.353L9 15.22 16.498 3z" />
     <path
-        android:fillColor="#FFF"
+        android:fillColor="#627EEA"
         android:fillAlpha="0"
         android:fillType="evenOdd"
         android:pathData="M16.498 20.968L24 16.616l-7.502 10.379L9 16.615l7.498 4.351zm0-17.968l7.497 12.22-7.497 4.353L9 15.22 16.498 3z" />

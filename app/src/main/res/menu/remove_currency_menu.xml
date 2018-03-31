@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/addAlertItemFV"
+        android:title="Add new alert"/>
+    <item
+        android:id="@+id/removeFromFavouriteItemFV"
+        android:title="Remove from favourite"/>
+    <item
+        android:id="@+id/moreInformationItemFV"
+        android:title="More information"/>
+</menu>

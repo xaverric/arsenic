@@ -27,7 +27,7 @@ public class NotificationSchedulerService {
     public void scheduleCurrencyNotification(Currency currency, Context context, long delay, boolean priceGoesAbove, boolean priceGoesBelow, String priceAbove, String priceBelow) {
         int notificationId = generateRandomId();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-                .setContentTitle("Currency: " + currency.getName())
+                .setContentTitle("Arsenic (" + currency.getName() + ")")
                 .setContentText("Price (USD): " + currency.getPriceUsd() + " | Price (BTC): " + currency.getPriceBtc())
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.btc)

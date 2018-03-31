@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
 
 @JsonDeserialize
 public class Currency implements Serializable {
@@ -336,10 +335,5 @@ public class Currency implements Serializable {
 
     public void setMarketCapRub(double marketCapRub) {
         this.marketCapRub = marketCapRub;
-    }
-
-    @Override
-    public String toString() {
-        return symbol + ": " + name;
     }
 }

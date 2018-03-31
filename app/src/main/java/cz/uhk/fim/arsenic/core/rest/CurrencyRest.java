@@ -7,19 +7,15 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 
 import java.util.List;
 
+import cz.uhk.fim.arsenic.core.model.Currency;
+
 @Rest(converters = MappingJackson2HttpMessageConverter.class)
-public interface CurrencyRest<T> {
+public interface CurrencyRest {
 
-    @Get("https://api.coinmarketcap.com/v1/ticker/{currencyId}")
-    List<T> getCurrency(@Path String currencyId);
-
-    @Get("https://api.coinmarketcap.com/v1/ticker")
-    List<T> getAllCurrencies();
-
-    @Get("https://api.coinmarketcap.com/v1/ticker/?limit={limit}")
-    List<T> getCurrencies(@Path Integer limit);
+    @Get("https://api.coinmarketcap.com/v1/ticker/{currencyId}/?convert={convertTo}")
+    List<Currency> getCurrency(@Path String currencyId, @Path String convertTo);
 
     @Get("https://api.coinmarketcap.com/v1/ticker/?convert={convertTo}&limit={limit}")
-    List<T> getConvertedCurrencies(@Path String convertTo, @Path Integer limit);
+    List<Currency> getConvertedCurrencies(@Path String convertTo, @Path Long limit);
 
 }
